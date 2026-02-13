@@ -3,3 +3,7 @@
 airflow_settings.yaml
 astro
 Dockerfile
+upgrade-test* 
+temp
+localnotes.md
+__pycache__

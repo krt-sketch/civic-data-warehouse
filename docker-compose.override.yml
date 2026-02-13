@@ -1,0 +1,16 @@
+version: "3.1"
+services:
+  localstack:
+    container_name: "localstack-s3only-override"
+    image: localstack/localstack
+    networks:
+      - airflow
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - SERVICES=s3
+      - GATEWAY_LISTEN=0.0.0.0:4566
+      - AWS_ACCESS_KEY_ID=092112787558
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - "./localstack:/docker-entrypoint-initaws.d"
