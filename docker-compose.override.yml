@@ -10,7 +10,7 @@ services:
     environment:
       - SERVICES=s3
       - GATEWAY_LISTEN=0.0.0.0:4566
-      - AWS_ACCESS_KEY_ID=092112787558
-      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ACCESS_KEY_ID=<aws_access_key>
+      - AWS_SECRET_ACCESS_KEY=<aws_secret_key>
     volumes:
       - "./localstack:/docker-entrypoint-initaws.d"
