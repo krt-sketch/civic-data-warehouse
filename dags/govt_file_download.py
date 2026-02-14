@@ -31,13 +31,15 @@ with DAG(
     with open(gov_files, "r") as read_file:
         gov_file_data = json.load(read_file)
         for file in gov_file_data["gov_files"]:
+            task_id="files_to_s3_" + file["file_name"]
             upload_file = PythonOperator(
-                task_id="files_to_s3_" + file["file_name"],
+                task_id=task_id,
                 python_callable=retrieve_gov_file,
                 op_kwargs={
                     "filename": file["file_name"],
                     "file_url": file["file_location"],
                     "bucket": BUCKET,
                     "s3_conn_id": "s3_datalake",
+                    "task_id": task_id,
                 },
             )
