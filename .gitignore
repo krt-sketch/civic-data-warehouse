@@ -7,3 +7,4 @@ upgrade-test*
 temp
 localnotes.md
 __pycache__
+logs
