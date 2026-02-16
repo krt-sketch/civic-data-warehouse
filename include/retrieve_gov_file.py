@@ -1,8 +1,8 @@
-import shutil
-import wget
+import shutil, wget
+import hashlib, base64
+import subprocess, os
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from zipfile import ZipFile
-import subprocess, os
 from airflow.utils.log import logging_mixin
 
 def unpack_zip(path_to_zip, extract_path, logger):
@@ -45,8 +45,14 @@ def retrieve_gov_file(filename, file_url, bucket, s3_conn_id, task_id):
     wget.download(file_url, download_dest)
     logger.info(f"{download_dest} downloaded")
 
-    prepped_dir = f"/tmp/prepped_{task_id}"[:50]
+    task_id_hash = hashlib.sha256(str(task_id).encode('utf-8')).digest()
+    task_id_hashstring = base64.b64encode(task_id_hash).decode('ascii').replace("/", "")
+    prepped_dir = f"/tmp/prepped_{task_id_hashstring}"[:99]
     logger.info(f"using tmp directory '{prepped_dir}'")
+
+    if not os.path.exists(prepped_dir):
+        logger.info(f"Creating directory {prepped_dir}")
+        os.makedirs(prepped_dir)
 
     # The directories can remain from run to run.
     logger.info("clearing tmp directory")
@@ -65,23 +71,21 @@ def retrieve_gov_file(filename, file_url, bucket, s3_conn_id, task_id):
     if filename.endswith(".zip"):
         unpack_zip(download_dest, prepped_dir, logger)
     else:
-        shutil.move(
-            download_dest,
-            prepped_dir + os.path.basename(download_dest).split("/")[-1],
-        )
-    for file in os.listdir(prepped_dir):
-        if file.endswith(".mdb"):
-            export_mdb_file(logger, file, prepped_dir)
-
+        logger.info(f"Moving {download_dest} into {prepped_dir} directory")
+        shutil.move(download_dest, prepped_dir)
+        
     for file in os.listdir(prepped_dir):
         logger.info(f"{file} found in {prepped_dir} for sending to S3")
-        if file.endswith(".csv"):
+        if file.endswith(".mdb"):
+            export_mdb_file(bucket, s3_conn_id, logger, file, prepped_dir)
+        elif file.endswith(".csv"):
             export_csv_file(bucket, s3_conn_id, logger, file, prepped_dir)
 
 def export_csv_file(bucket, s3_conn_id, logger, file, prepped_dir):
     OBJECT = file.replace(" ", "")
     PATH_TO_FILE = prepped_dir + file
     BUCKET = bucket
+    logger.info(f"Moving {PATH_TO_FILE} into s3 bucket {bucket}")
     upload_to_s3(
                 s3_conn_id=s3_conn_id,
                 filename=PATH_TO_FILE,
@@ -91,7 +95,7 @@ def export_csv_file(bucket, s3_conn_id, logger, file, prepped_dir):
             )
     logger.info(f"{file} successfully loaded to S3")
 
-def export_mdb_file(logger, file, prepped_dir):
+def export_mdb_file(bucket, s3_conn_id, logger, file, prepped_dir):
     logger.info(f"{file} identified as .mdb")
     try:
         prepped_file = f"{prepped_dir}{file}"
@@ -114,15 +118,10 @@ def export_mdb_file(logger, file, prepped_dir):
                 )
     for table in tables:
         if table != "" and table != "\n":
-            export_file = (
-                        prepped_dir
-                        + os.path.splitext(file)[0]
-                        + "_"
-                        + table.replace(" ", "_")
-                        + ".csv"
-                    )
-            logger.info(f"Exporting {table} to {export_file}")
-            with open(export_file, "wb") as f:
+            export_file = os.path.splitext(file)[0] + "_" + table.replace(" ", "_") + ".csv"
+            export_fullpath = prepped_dir + export_file
+            logger.info(f"Exporting {table} to {export_fullpath}")
+            with open(export_fullpath, "wb") as f:
                 try:
                     subprocess.check_call(
                                 ["mdb-export", prepped_file, table], stdout=f
@@ -133,3 +132,5 @@ def export_mdb_file(logger, file, prepped_dir):
                                     e.cmd, e.returncode, e.output
                                 )
                             )
+                
+            export_csv_file(bucket, s3_conn_id, logger, export_file, prepped_dir)
