@@ -11,21 +11,21 @@ Currently converts the following file formats. All others are loaded to s3 after
 
 
 import json
-from airflow import DAG
 from datetime import datetime, timedelta
+from airflow.sdk import DAG, task_group
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.decorators import task_group
-from airflow.operators.python import PythonOperator
 from include.retrieve_gov_file import retrieve_gov_file, clear_files_and_subdirs
 
 gov_files = "include/gov_files.json"
 BUCKET = "civic-data-warehouse-lz"
-prep_directory = "/tmp/prep/" 
+prep_directory = "/tmp/prep/"
 
 # Tasks currently fail if run on all gov_docs at once, but confirmed to work in smaller batches. Worker resource constraints?
 with DAG(
     "govt_file_download",
     description="Downloads public civic data and saves to s3 for processing",
-    schedule_interval=None,
+    schedule=None,
     start_date=datetime(2022, 6, 24),
     catchup=False,
     doc_md=doc_md_DAG,
