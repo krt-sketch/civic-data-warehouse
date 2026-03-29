@@ -9,7 +9,7 @@ services:
     env_file:
       - .localstack.env
     volumes:
-      - "./localstack:/docker-entrypoint-initaws.d"
+      - "./localstack:/tmp/localstack-s3-storage"
   postgres-cdw:
     image: postgres:latest
     env_file:
@@ -18,10 +18,6 @@ services:
       - airflow
     ports:
       - "127.0.0.1:5532:5432"
-    # At this time, I do not want this info to persist from run to run / build to build.
-    #  (I also don't know if the volume path below will work, so...)
-    # volumes:
-    #   - postgres-db-volume:/var/lib/postgresql/cdw
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 10s
