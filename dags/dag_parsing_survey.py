@@ -1,9 +1,8 @@
 from airflow.models import DagBag
 from datetime import datetime, timedelta
-import time
 from airflow.sdk import DAG
 from airflow.providers.standard.operators.python import PythonOperator
-
+import time, logging
 
 def survey_dag_parsing_times(**kwargs):
     """
@@ -28,7 +27,7 @@ def survey_dag_parsing_times(**kwargs):
 
     # Log the parsing times
     for dag_id, parsing_time in parsing_times.items():
-        print(f"DAG: {dag_id} parsed in {parsing_time:.4f} seconds")
+        logging.info(f"DAG: {dag_id} parsed in {parsing_time:.4f} seconds")
 
     return parsing_times
 

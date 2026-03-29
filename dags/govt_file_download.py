@@ -14,6 +14,7 @@ import json
 from datetime import datetime, timedelta
 from airflow.sdk import DAG, task_group
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.decorators import task_group
 from include.retrieve_gov_file import retrieve_gov_file, clear_files_and_subdirs
 
 gov_files = "include/gov_files.json"
@@ -30,7 +31,7 @@ with DAG(
     doc_md=doc_md_DAG,
     default_args={"retries": 3, "retry_delay": timedelta(minutes=1)},
 ) as dag:
-
+    
     @task_group()
     def upload_all_files():
         with open(gov_files, "r") as read_file:
@@ -49,7 +50,7 @@ with DAG(
                         "base_prep_dir": prep_directory
                     },
                 )
-
+    
     cleanup_task = PythonOperator(
         task_id='clear_tmp_directory',
         python_callable=clear_files_and_subdirs,

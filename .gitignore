@@ -7,3 +7,6 @@ temp
 __pycache__
 .idea/
 .DS_Store
+upgrade-test* 
+localnotes.md
+logs
