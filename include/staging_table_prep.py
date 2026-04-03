@@ -196,5 +196,6 @@ def populate_staging_table(bucket, s3_conn_id, postgres_conn, key):
 
     sqlBulkCopy = BULK_COPY_STATEMENT_FROM_DATAFRAME(df, tablename)
     logger.debug(sqlBulkCopy)
+    logger.debug('something is up')
     bulk_load_csv(sqlBulkCopy, filename, postgres_conn, logger)
 
