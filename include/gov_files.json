@@ -45,8 +45,54 @@
         "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/condemn.zip"
     },
     {
-        "file_name": "lra_public.zip",
-        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/lra_public.zip"
+        "file_name": "forestry_maintenance_properties.csv",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/forestry-maintenance-properties.csv"
+    }
+  ],
+  "gov_files_orig":[
+    {
+        "file_name": "prcl.zip",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/prcl.zip"
+    },
+    {
+        "file_name": "building_permit_codes.zip",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/codes.zip"
+    },
+    {
+        "file_name": "building_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/building-permits/building-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "demolition_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/demolition-permits/demolition-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "electrical_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/electrical-permits/electrical-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "mechanical_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/mechanical-permits/mechanical-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "occupancy_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/occupancy-permits/occupancy-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "plumbing_permits_last_30_days.csv",
+        "file_location": "https://www.stlouis-mo.gov/customcf/endpoints/plumbing-permits/plumbing-permits-30-days-export.cfm?permitType=all&dataType=csv"
+    },
+    {
+        "file_name": "historical_conservation.zip",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/hcd.zip"
+    },
+    {
+        "file_name": "property_sales.zip",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/prclsale.zip"
+    },
+    {
+        "file_name": "inspections_condemnations_vacancies.zip",
+        "file_location": "http://www.stlouis-mo.gov/data/upload/data-files/condemn.zip"
     },
     {
         "file_name": "forestry_maintenance_properties.csv",
