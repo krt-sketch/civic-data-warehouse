@@ -2,6 +2,15 @@
 # from airflow.providers.common.sql.hooks.sql import DbApiHook
 
 
+# This is an interesting Claude Code creation. I was looking to remove only a single string from
+#  DAG logging. Standard methods of changing log levels on a class do not work for what I wanted.
+#  After a two-hour back and forth, Claude came up with the code below. 
+# As you can see, it's completely hijacking the DbApiHook run method, creating a logging
+#  wrapper, and then sending this new wrapper in place into DbApiHook.
+# This is... well, it's great for local debugging. I've certainly done my share of similar
+#  things when using .NET. I just don't think it should go outside of my own fork, though.
+
+
 # class _RowsAffectedSuppressor:
 #     """Wraps a logger (stdlib or structlog) and drops 'Rows affected:' info messages."""
 
