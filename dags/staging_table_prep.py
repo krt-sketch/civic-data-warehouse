@@ -35,9 +35,9 @@ with DAG(
     template_searchpath=[sql_dir, "include/sql"],
 ) as dag:
     truncate_staging = SQLExecuteQueryOperator(
-        task_id="truncate_staging",
+        task_id="create_staging",
         conn_id="cdw-dev",
-        sql=f"truncate_schema.sql",
+        sql=f"create_staging.sql",
         params={"schema": "staging"},
     )
 
